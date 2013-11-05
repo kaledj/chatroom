@@ -1,28 +1,29 @@
 """
-ZetCode PyQt4 tutorial 
+Chatroom client GUI
 
-In this example, we create a simple
-window in PyQt4.
 
-author: Jan Bodnar
-website: zetcode.com 
-last edited: October 2011
+author: David Kale, Sina Tashakkori, Tim Jassman
+version: 1
 """
 
 import sys
 from PyQt4 import QtGui
 
+class Example(QtGui.QWidget):
+	
+	def __init__(self):
+		super(Example, self).__init__()
+		self.initUI()
+
+	def initUI(self):
+		self.setGeometry(300, 300, 250, 150)
+		self.setWindowTitle("Chatroom")
+		self.setWindowIcon(QtGui.QIcon('icons\sina.png'))
+		self.show()
 
 def main():
-	
 	app = QtGui.QApplication(sys.argv)
-
-	w = QtGui.QWidget()
-	w.resize(250, 150)
-	w.move(300, 300)
-	w.setWindowTitle('Simple')
-	w.show()
-	
+	ex = Example()
 	sys.exit(app.exec_())
 
 if __name__ == '__main__':
