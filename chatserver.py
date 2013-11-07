@@ -46,20 +46,21 @@ class ChatServer:
     def handle_connection(self, connectionSocket):
         request = connectionSocket.recv(1024)
         splitRequest = request.split(' ', 1)
+        print request
         if splitRequest[0] == "NAME":
             if len(splitRequest) == 2:
-                if(nameExists(splitRequest[1])):
+                if(self.nameExists(splitRequest[1])):
                     connectionSocket.send("ERROR Name is in use")
                     self.clientSockets.remove(connectionSocket)
                     connectionSocket.close()
                 else:
                     self.clientInfo.append([connectionSocket,splitRequest[1],""])
-                    clientSockets.remove(connectionSocket)
+                    self.clientSockets.remove(connectionSocket)
                     connectionSocket.send("OK")
             else:
                 connectionSocket.send("ERROR Invalid name")
         elif splitRequest[0] == "GET":
-            info = getSocketInfo(connectionSocket)
+            info = self.getSocketInfo(connectionSocket)
             connectionSocket.send("MSGS "+info[2])
             data = "USERS"
             for i in self.clientInfo:
@@ -67,11 +68,15 @@ class ChatServer:
             connectionSocket.send(data);
             info[2] = ""
         elif splitRequest[0] == "PUT":
-            if len(splitRequest == 2):
-                name = getName(connectionSocket)
-                for s in self.clientInfo:
-                    s[2] += "\n<"+name+">"+splitRequest[1]
-                connectionSocket.send("OK")
+            try:
+                if len(splitRequest) == 2:
+                    name = self.getSocketInfo(connectionSocket)[1]
+                    for s in self.clientInfo:
+                        s[2] += "\n<"+name+">"+splitRequest[1]
+                    connectionSocket.send("OK")
+            except Exception:
+               import traceback
+               print traceback.format_exc() 
         elif splitRequest[0] == "USERS":
             data = "MSGS \nUsers:"
             for i in self.clientInfo:
