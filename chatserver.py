@@ -1,4 +1,4 @@
-#!/usr/bin/python                                                                                                                                                                 
+#!/usr/bin/python                                                                                                                        
 
 from socket import *
 import re
@@ -52,10 +52,8 @@ class ChatServer:
                 if(self.nameExists(splitRequest[1])):
                     connectionSocket.send("ERROR Name is in use")
                     self.clientSockets.remove(connectionSocket)
-                    connectionSocket.close()
                 else:
                     self.clientInfo.append([connectionSocket,splitRequest[1],""])
-                    self.clientSockets.remove(connectionSocket)
                     connectionSocket.send("OK")
             else:
                 connectionSocket.send("ERROR Invalid name")
@@ -82,6 +80,10 @@ class ChatServer:
             for i in self.clientInfo:
                 data += "\n"+i[1]
             connectionSocket.send(data)
+        else:
+            if connectionSocket in self.clientSockets:
+                self.clientSockets.remove(connectionSocket)
+                self.clientInfo.remove(self.getSocketInfo(connectionSocket))
 
 server = ChatServer(15008)
 server.run()
