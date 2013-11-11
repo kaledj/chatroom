@@ -11,18 +11,25 @@ from PyQt4 import QtGui, QtCore
 
 class ChatRoom(QtGui.QWidget):
 	
+	userList = QtGui.QTextEdit("Users:")
+
 	def __init__(self):
 		super(ChatRoom, self).__init__()
 		self.initUI()
 
 	def initUI(self):
 		# Displays the list of users
-		self.userDisplay = QtGui.QTextEdit("Users:", self)
-		self.userDisplay.setReadOnly(True)
-		self.userDisplay.setFixedWidth(100)
-		self.userDisplay.append("Timothy")
-		self.userDisplay.append("David")
-		self.userDisplay.append("Sina")
+		#self.userList = QtGui.QTextEdit("Users:", self)
+		#self.userList.setReadOnly(True)
+		#self.userList.setFixedWidth(100)
+		#self.userList.append("Timothy")
+		#self.userList.append("David")
+		#self.userList.append("Sina")
+		userList.setReadOnly(True)
+		userList.setFixedWidth(100)
+		userList.append("Timothy")
+		userList.append("David")
+		userList.append("Sina")
 
 		# Displays the chat
 		self.chatDisplay = QtGui.QTextEdit(self)
@@ -40,7 +47,7 @@ class ChatRoom(QtGui.QWidget):
 		# Layout management
 		self.displayBox = QtGui.QHBoxLayout()
 		self.displayBox.addWidget(self.chatDisplay)
-		self.displayBox.addWidget(self.userDisplay)
+		self.displayBox.addWidget(self.userList)
 		self.sendBox = QtGui.QHBoxLayout()
 		self.sendBox.addWidget(self.chatInput)
 		self.sendBox.addWidget(self.sendButton)
@@ -66,8 +73,9 @@ class ChatRoom(QtGui.QWidget):
 
 	def sendmessage(self):
 		message = self.chatInput.text()
-		self.chatInput.clear()
-		self.chatDisplay.append(message)
+		if message:
+			self.chatInput.clear()
+			self.chatDisplay.append(message)
 
 def main():
 	app = QtGui.QApplication(sys.argv)
