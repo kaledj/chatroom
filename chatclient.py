@@ -38,7 +38,7 @@ class ChatClient:
 
             try:
 
-                for i in 1:2:
+                for i in range(2):
                     chats = serverSocket.recv(4196)
                     chatsArray = chats.split(" ",1)
                     if chatsArray[0] == "USERS":
