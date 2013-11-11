@@ -76,7 +76,3 @@ class ChatClient:
             
 client = ChatClient(15008)
 client.run()
-
-
-\
-
