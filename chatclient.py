@@ -47,8 +47,8 @@ class ChatClient:
                         print("David is really gay")
 
             except Exception, e:
-                import traceback
-    		print traceback.format.exc()
+		import traceback
+		print "pass"
     
     def check_status(self,status):
         if status == "OK":
