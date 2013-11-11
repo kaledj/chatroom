@@ -42,12 +42,18 @@ class ChatServer:
             if s[0] == connectionSocket:
                 return s
 
+    def socketInfoExists(self, connectionSocket):
+        for s in self.clientInfo:
+            if s[0] == connectionSocket:
+                return True
+        return False
+
     # handle_connection                                                                                                                                                           
     def handle_connection(self, connectionSocket):
         request = connectionSocket.recv(1024)
         splitRequest = request.split(' ', 1)
-        print request
         if splitRequest[0] == "NAME":
+            print request
             if len(splitRequest) == 2:
                 if(self.nameExists(splitRequest[1])):
                     connectionSocket.send("ERROR Name is in use")
@@ -58,6 +64,7 @@ class ChatServer:
             else:
                 connectionSocket.send("ERROR Invalid name")
         elif splitRequest[0] == "GET":
+            print request
             info = self.getSocketInfo(connectionSocket)
             connectionSocket.send("MSGS "+info[2])
             data = "USERS"
@@ -66,6 +73,7 @@ class ChatServer:
             connectionSocket.send(data);
             info[2] = ""
         elif splitRequest[0] == "PUT":
+            print request
             try:
                 if len(splitRequest) == 2:
                     name = self.getSocketInfo(connectionSocket)[1]
@@ -73,9 +81,9 @@ class ChatServer:
                         s[2] += "\n<"+name+">"+splitRequest[1]
                     connectionSocket.send("OK")
             except Exception:
-               import traceback
-               print traceback.format_exc() 
+                pass
         elif splitRequest[0] == "USERS":
+            print request
             data = "MSGS \nUsers:"
             for i in self.clientInfo:
                 data += "\n"+i[1]
