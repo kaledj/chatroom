@@ -37,7 +37,6 @@ class ChatClient:
             serverSocket.send(message)
 
             try:
-
                 for i in range(2):
                     chats = serverSocket.recv(4196)
                     chatsArray = chats.split(" ",1)
