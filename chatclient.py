@@ -3,6 +3,7 @@
 from ChatGUI import *
 from socket import *
 import re, thread, sys, signal, os
+import time
 
 class ChatClient(QtCore.QObject):
 	userName = ""
@@ -47,6 +48,7 @@ class ChatClient(QtCore.QObject):
 
 	def get_data(self):
 		while(1):
+			time.sleep(.25)
 			self.get_users()
 			self.get_msgs()
 
