@@ -13,14 +13,9 @@ class ChatClient(QtCore.QObject):
 	def __init__(self, serverPort):
 		super(ChatClient, self).__init__()
 		self.serverPort = serverPort
-		#GUIthread = QtCore.QThread()
 		self.GUI = ChatGUI()
-		#self.GUI.moveToThread(GUIthread)
-		#self.GUI.finished.connect(GUIthread.quit)
-		#GUIthread.start()
 		self.GUI.connectSendButton(self.send_message)
 		self.clientThread = thread.start_new_thread(self.run, ())
-		#self.run()
 		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
 
 	# handle_connection                                                                                                                       
@@ -94,24 +89,18 @@ class ChatClient(QtCore.QObject):
 
 	def run(self):
 		self.process_command("HELLO I AM RUSSIA")
-		#self.process_command(sys.argv[1])
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
 		self.serverSocket.settimeout(.25)
 		self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
 		self.serverSocket.send("NAME " + self.userName)
 		status = self.serverSocket.recv(256)
 		self.check_status(status)
-		#self.send_message()
-		#status = self.serverSocket.recv(256)
-		#self.check_status(status)
 		self.get_data()
-		#thread.start_new_thread(self.send_get,())
 		while(1):
 			a = 0
 
 def main():
 	app = QtGui.QApplication(sys.argv)            
-	#thread.start_new_thread(sys.exit, (app.exec_, ))
 	client = ChatClient(15008)
 	sys.exit(app.exec_())
 
