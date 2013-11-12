@@ -35,7 +35,7 @@ class ChatGUI(QtGui.QWidget):
 		
 		# Button to send chat message
 		self.sendButton = QtGui.QPushButton('Send', self)
-		self.sendButton.clicked.connect(self.sendmessage)
+		#self.sendButton.clicked.connect(self.sendmessage)
 		
 		# Layout management
 		self.displayBox = QtGui.QHBoxLayout()
@@ -79,11 +79,15 @@ class ChatGUI(QtGui.QWidget):
 	def appendusers(self, userName):
 		self.userList.append(userName)
 
-	def setuserlist(self, users):
-		self.userList.clear()
-		print 'FUCK THIS SHIT'
-		self.userList.append(users)
+	def setUserList(self, user):
+		self.userList.setText("Users:\n----------\n" + user)
+		#print 'ChatGUI#setuserlist called'
+		#self.userList.append(users)
 		#self.userList.setText(users)
+
+	def updateUserList(self, signum, frame):
+		print "ASD"
+		self.userList.clear()
 
 	def addMessage(self, message):
 		if message:
@@ -91,6 +95,9 @@ class ChatGUI(QtGui.QWidget):
 
 	def connectSendButton(self, callable):
 		self.sendButton.clicked.connect(callable)
+
+	def connectUserList(self, callable, text):
+		self.userList.setText(text).connect(callable)
 
 def main():
 	app = QtGui.QApplication(sys.argv)

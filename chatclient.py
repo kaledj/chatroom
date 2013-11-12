@@ -2,19 +2,25 @@
 
 from ChatGUI import *
 from socket import *
-import re
-import thread
-import sys
+import re, thread, sys, signal, os
 
-class ChatClient:
-
+class ChatClient(QtCore.QObject):
 	userName = ""
-	serverPort = 0
+	#serverPort = 0
 	
 	# constructor                                                                                                                             
 	def __init__(self, serverPort):
+		super(ChatClient, self).__init__()
 		self.serverPort = serverPort
+		#GUIthread = QtCore.QThread()
 		self.GUI = ChatGUI()
+		#self.GUI.moveToThread(GUIthread)
+		#self.GUI.finished.connect(GUIthread.quit)
+		#GUIthread.start()
+		self.GUI.connectSendButton(self.send_message)
+		self.clientThread = thread.start_new_thread(self.run, ())
+		#self.run()
+		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
 
 	# handle_connection                                                                                                                       
 	def send_username(self, serverPort):
@@ -28,50 +34,76 @@ class ChatClient:
 		else:
 			self.userName = command
 
-	def send_message(self,message,serverSocket):
-		message = "PUT " + message
-		serverSocket.send(message)
+	def send_message(self):
+		message = "PUT " 
+		message += self.GUI.chatInput.text().toAscii()
+		#print type(message)
+		#self.GUI.chatInput.clear()
+		#message = "PUT " + message
+		self.serverSocket.send(message)
+		#status = self.serverSocket.recv(1024)
+		#print(status)
+		#print(message2)
 
-	def send_get(self,serverSocket):
+	def get_data(self):
 		while(1):
-			message = "GET"
-			serverSocket.send(message)
+			self.get_users()
+			self.get_msgs()
 
-			try:
-				for i in range(2):
-					chats = serverSocket.recv(4196)
-					chatsArray = chats.split(" ",1)
-					if chatsArray[0] == "USERS":
-						self.GUI.setuserlist(chatsArray[1])
+	def get_users(self):
+		message = "GETUSERS"
+		self.serverSocket.send(message)
+		try:
+			chats = self.serverSocket.recv(4196)
+			chatsArray = chats.split(" ",1)
+			#print chatsArray
+			if chatsArray[0] == "USERS":
+				self.emit(QtCore.SIGNAL("updateUsers"), chatsArray[1])
+				#self.GUI.setUserList(chatsArray[1])
+				#signal.signal(signal.SIGALRM, self.GUI.updateUserList)
+				#signal.alarm(1)
+				#print("chatsArray[0] == USERS")
+			#else: 
+				#print chatsArray
+				#print "error in get_users"
+		except Exception, e:
+			pass
 
-					elif chatsArray[0] == "MSGS":
-						self.GUI.addMessage(chatsArray[1])
-						print("David is really gay")
-
-			except Exception, e:
-				pass
+	def get_msgs(self):
+		message = "GETMSGS"
+		self.serverSocket.send(message)
+		try:
+			chats = self.serverSocket.recv(4196)
+			chatsArray = chats.split(" ",1)
+			#print chatsArray
+			if chatsArray[0] == "MSGS":
+				self.GUI.addMessage(chatsArray[1])
+				#print("chatsArray[0] == USERS")
+			#else:
+			#	#print "error in get_msgs"
+		except Exception, e:
+			pass
 	
 	def check_status(self,status):
 		if status == "OK":
 			print "ok to chat"
-
 		else:
 			print status
 
 	def run(self):
-		self.process_command("Test")
+		self.process_command("Test2")
 		#self.process_command(sys.argv[1])
-		serverSocket = socket(AF_INET,SOCK_STREAM)
-		serverSocket.settimeout(.25)
-		serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
-		serverSocket.send("NAME " + self.userName)
-		status = serverSocket.recv(256)
+		self.serverSocket = socket(AF_INET,SOCK_STREAM)
+		self.serverSocket.settimeout(.25)
+		self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
+		self.serverSocket.send("NAME " + self.userName)
+		status = self.serverSocket.recv(256)
 		self.check_status(status)
-		self.send_message("Sina loves the D",serverSocket)
-		status = serverSocket.recv(256)
-		self.check_status(status)
-		self.send_get(serverSocket)
-		thread.start_new_thread(self.send_get,(serverSocket,))
+		#self.send_message()
+		#status = self.serverSocket.recv(256)
+		#self.check_status(status)
+		self.get_data()
+		#thread.start_new_thread(self.send_get,())
 		while(1):
 			a = 0
 
@@ -79,7 +111,6 @@ def main():
 	app = QtGui.QApplication(sys.argv)            
 	#thread.start_new_thread(sys.exit, (app.exec_, ))
 	client = ChatClient(15008)
-	thread.start_new_thread(client.run, ())
 	sys.exit(app.exec_())
 
 if __name__ == '__main__':
