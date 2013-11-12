@@ -1,4 +1,4 @@
-#!/usr/bin/python                                                                                                                                                                 
+#!/usr/bin/python                                                                                                                        
 
 from socket import *
 import re
@@ -50,46 +50,47 @@ class ChatServer:
 
     # handle_connection                                                                                                                                                           
     def handle_connection(self, connectionSocket):
-        request = connectionSocket.recv(1024)
-        splitRequest = request.split(' ', 1)
-        if splitRequest[0] == "NAME":
-            print request
-            if len(splitRequest) == 2:
-                if(self.nameExists(splitRequest[1])):
-                    connectionSocket.send("ERROR Name is in use")
-                    self.clientSockets.remove(connectionSocket)
-                    connectionSocket.close()
+        try:
+            request = connectionSocket.recv(1024)
+            splitRequest = request.split(' ', 1)
+            if splitRequest[0] == "NAME":
+                print request
+                if len(splitRequest) == 2:
+                    if(self.nameExists(splitRequest[1])):
+                        connectionSocket.send("ERROR Name is in use")
+                        self.clientSockets.remove(connectionSocket)
+                    else:
+                        self.clientInfo.append([connectionSocket,splitRequest[1],""])
+                        connectionSocket.send("OK")
                 else:
-                    self.clientInfo.append([connectionSocket,splitRequest[1],""])
-                    self.clientSockets.remove(connectionSocket)
-                    connectionSocket.send("OK")
-            else:
-                connectionSocket.send("ERROR Invalid name")
-        elif splitRequest[0] == "GET":
-            print request
-            info = self.getSocketInfo(connectionSocket)
-            connectionSocket.send("MSGS "+info[2])
-            data = "USERS"
-            for i in self.clientInfo:
-                data += " "+i[1]
-            connectionSocket.send(data);
-            info[2] = ""
-        elif splitRequest[0] == "PUT":
-            print request
-            try:
+                    connectionSocket.send("ERROR Invalid name")
+            elif splitRequest[0] == "GET":
+                print request
+                info = self.getSocketInfo(connectionSocket)
+                connectionSocket.send("MSGS "+info[2])
+                data = "USERS"
+                for i in self.clientInfo:
+                    data += i[1]+"\n"
+                connectionSocket.send(data);
+                info[2] = ""
+            elif splitRequest[0] == "PUT":
+                print request
                 if len(splitRequest) == 2:
                     name = self.getSocketInfo(connectionSocket)[1]
                     for s in self.clientInfo:
-                        s[2] += "\n<"+name+">"+splitRequest[1]
+                        s[2] += "<"+name+">"+splitRequest[1]+"\n"
                     connectionSocket.send("OK")
-            except Exception:
-                pass
-        elif splitRequest[0] == "USERS":
-            print request
-            data = "MSGS \nUsers:"
-            for i in self.clientInfo:
-                data += "\n"+i[1]
-            connectionSocket.send(data)
-
+            elif splitRequest[0] == "USERS":
+                print request
+                data = "MSGS \nUsers:"
+                for i in self.clientInfo:
+                    data += i[1]+"\n"
+                connectionSocket.send(data)
+            else:
+                if connectionSocket in self.clientSockets:
+                    self.clientSockets.remove(connectionSocket)
+                    self.clientInfo.remove(self.getSocketInfo(connectionSocket))
+        except Exception:
+            pass
 server = ChatServer(15008)
 server.run()
