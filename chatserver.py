@@ -54,7 +54,7 @@ class ChatServer:
             request = connectionSocket.recv(1024)
             splitRequest = request.split(' ', 1)
             if splitRequest[0] == "NAME":
-                print request
+                #print request
                 if len(splitRequest) == 2:
                     if(self.nameExists(splitRequest[1])):
                         connectionSocket.send("ERROR Name is in use")
@@ -64,24 +64,31 @@ class ChatServer:
                         connectionSocket.send("OK")
                 else:
                     connectionSocket.send("ERROR Invalid name")
-            elif splitRequest[0] == "GET":
-                print request
+            elif splitRequest[0] == "GETMSGS":
+                #print request
                 info = self.getSocketInfo(connectionSocket)
-                connectionSocket.send("MSGS "+info[2])
-                data = "USERS"
+                message = "MSGS " + info[2]
+                connectionSocket.send(message)
+                info[2] = ""
+                print message
+            elif splitRequest[0] == "GETUSERS":
+                #print request
+                data = "USERS "
                 for i in self.clientInfo:
                     data += i[1]+"\n"
-                connectionSocket.send(data);
-                info[2] = ""
+                connectionSocket.send(data)
+                print data
             elif splitRequest[0] == "PUT":
-                print request
+                #print request
                 if len(splitRequest) == 2:
                     name = self.getSocketInfo(connectionSocket)[1]
                     for s in self.clientInfo:
-                        s[2] += "<"+name+">"+splitRequest[1]+"\n"
-                    connectionSocket.send("OK")
+                        if(s[2]):
+                            s[2] += "\n"
+                        s[2] += "<"+name+">"+splitRequest[1]
+                    #connectionSocket.send("OK")
             elif splitRequest[0] == "USERS":
-                print request
+                #print request
                 data = "MSGS \nUsers:"
                 for i in self.clientInfo:
                     data += i[1]+"\n"
