@@ -15,7 +15,7 @@ class ChatClient(QtCore.QObject):
 		super(ChatClient, self).__init__()
 		self.serverPort = serverPort
 		self.GUI = ChatGUI()
-		self.GUI.connectSendButton(self.send_message)
+		self.GUI.connectMessageInput(self.send_message)
 		self.clientThread = thread.start_new_thread(self.run, ())
 		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
 		sys.exit(self.app.exec_())
@@ -35,13 +35,9 @@ class ChatClient(QtCore.QObject):
 	def send_message(self):
 		message = "PUT " 
 		message += self.GUI.chatInput.text().toAscii()
-		#print type(message)
-		#self.GUI.chatInput.clear()
-		#message = "PUT " + message
+		self.GUI.chatInput.clear()
+		self.GUI.chatInput.setFocus()
 		self.serverSocket.send(message)
-		#status = self.serverSocket.recv(1024)
-		#print(status)
-		#print(message2)
 
 	def get_data(self):
 		while(1):

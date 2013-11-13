@@ -28,10 +28,10 @@ class ChatGUI(QtGui.QWidget):
 		# Text input for chat
 		self.chatInput = QtGui.QLineEdit(self)
 		self.chatInput.setMaxLength(100)
-		
+
 		# Button to send chat message
 		self.sendButton = QtGui.QPushButton('Send', self)
-		
+
 		# Layout management
 		self.displayBox = QtGui.QHBoxLayout()
 		self.displayBox.addWidget(self.chatDisplay)
@@ -49,6 +49,7 @@ class ChatGUI(QtGui.QWidget):
 		self.setWindowTitle("ChatGUI")
 		self.setWindowIcon(QtGui.QIcon("icons\sina.png"))
 		self.show()
+		self.chatInput.setFocus()
 
 	def sendmessage(self):
 		message = self.chatInput.text()
@@ -66,10 +67,9 @@ class ChatGUI(QtGui.QWidget):
 		self.userList.append(userName)
 
 	def setUserList(self, user):
-		self.userList.setText("Users:\n----------\n" + user)
-		#print 'ChatGUI#setuserlist called'
-		#self.userList.append(users)
-		#self.userList.setText(users)
+		usersText = "Users:\n----------\n" + user
+		if self.userList.toPlainText() != usersText:
+			self.userList.setText(usersText)
 
 	def updateUserList(self, signum, frame):
 		print "ASD"
@@ -79,7 +79,8 @@ class ChatGUI(QtGui.QWidget):
 		if message:
 			self.chatDisplay.append(message)
 
-	def connectSendButton(self, callable):
+	def connectMessageInput(self, callable):
+		self.chatInput.returnPressed.connect(callable)
 		self.sendButton.clicked.connect(callable)
 
 	def connectUserList(self, callable, text):
