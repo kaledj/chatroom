@@ -27,6 +27,7 @@ class ChatGUI(QtGui.QWidget):
 
 		# Text input for chat
 		self.chatInput = QtGui.QLineEdit(self)
+		self.chatInput.setMaxLength(100)
 		
 		# Button to send chat message
 		self.sendButton = QtGui.QPushButton('Send', self)
