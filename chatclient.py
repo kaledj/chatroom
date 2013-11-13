@@ -33,11 +33,12 @@ class ChatClient(QtCore.QObject):
 			self.userName = command
 
 	def send_message(self):
-		message = "PUT " 
-		message += self.GUI.chatInput.text().toAscii()
-		self.GUI.chatInput.clear()
-		self.GUI.chatInput.setFocus()
-		self.serverSocket.send(message)
+		message = self.GUI.chatInput.text().toAscii()
+		if message:
+			message = "PUT " + message
+			self.GUI.chatInput.clear()
+			self.serverSocket.send(message)
+		self.GUI.chatInput.setFocus()		
 
 	def get_data(self):
 		while(1):
