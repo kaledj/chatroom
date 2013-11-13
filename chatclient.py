@@ -11,12 +11,14 @@ class ChatClient(QtCore.QObject):
 	
 	# constructor                                                                                                                             
 	def __init__(self, serverPort):
+		self.app = QtGui.QApplication(sys.argv)
 		super(ChatClient, self).__init__()
 		self.serverPort = serverPort
 		self.GUI = ChatGUI()
 		self.GUI.connectSendButton(self.send_message)
 		self.clientThread = thread.start_new_thread(self.run, ())
 		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
+		sys.exit(self.app.exec_())
 
 	# handle_connection                                                                                                                       
 	def send_username(self, serverPort):
@@ -86,6 +88,7 @@ class ChatClient(QtCore.QObject):
 			print "ok to chat"
 		else:
 			print status
+			self.app.closeAllWindows()
 
 	def run(self):
 		self.process_command("HELLO I AM RUSSIA")
@@ -100,9 +103,7 @@ class ChatClient(QtCore.QObject):
 			a = 0
 
 def main():
-	app = QtGui.QApplication(sys.argv)            
 	client = ChatClient(15008)
-	sys.exit(app.exec_())
 
 if __name__ == '__main__':
 	main()
