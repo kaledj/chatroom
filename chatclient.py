@@ -94,7 +94,12 @@ class ChatClient(QtCore.QObject):
 			self.app.closeAllWindows()
 
 	def run(self):
-		self.process_command(sys.argv[1])
+		try:
+			self.process_command(sys.argv[1])
+		except IndexError:
+			print "Error: Must provide a username"
+			self.emit(QtCore.SIGNAL("exit"),)
+			sys.exit(0)
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
 		self.serverSocket.settimeout(.25)
 		try:
