@@ -18,6 +18,7 @@ class ChatClient(QtCore.QObject):
 		self.GUI.connectMessageInput(self.send_message)
 		self.clientThread = thread.start_new_thread(self.run, ())
 		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
+		self.connect(self, QtCore.SIGNAL("addMessage"), self.GUI.addMessage)
 		sys.exit(self.app.exec_())
 
 	# handle_connection                                                                                                                       
@@ -73,13 +74,13 @@ class ChatClient(QtCore.QObject):
 			chatsArray = chats.split(" ",1)
 			#print chatsArray
 			if chatsArray[0] == "MSGS":
-				self.GUI.addMessage(chatsArray[1])
-				#print("chatsArray[0] == USERS")
-			#else:
-			#	#print "error in get_msgs"
+				#self.GUI.addMessage(chatsArray[1])
+				self.emit(QtCore.SIGNAL("addMessage"), chatsArray[1])
+			else:
+				print "error in get_msgs"
 		except Exception, e:
 			pass
-	
+
 	def check_status(self,status):
 		if status == "OK":
 			print "ok to chat"
