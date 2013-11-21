@@ -31,7 +31,7 @@ class ChatGUI(QtGui.QWidget):
 
 		# Button to send chat message
 		self.sendButton = QtGui.QPushButton('Send', self)
-
+		
 		# Layout management
 		self.displayBox = QtGui.QHBoxLayout()
 		self.displayBox.addWidget(self.chatDisplay)
@@ -77,7 +77,10 @@ class ChatGUI(QtGui.QWidget):
 
 	def addMessage(self, message):
 		if message:
-			self.chatDisplay.append(message)
+			try:
+				self.chatDisplay.append(message)
+			except:
+				pass
 
 	def connectMessageInput(self, callable):
 		self.chatInput.returnPressed.connect(callable)
