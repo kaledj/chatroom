@@ -89,7 +89,7 @@ class ChatClient(QtCore.QObject):
 			self.app.closeAllWindows()
 
 	def run(self):
-		self.process_command("HELLO I AM SWEDEN")
+		self.process_command(sys.argv[1])
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
 		self.serverSocket.settimeout(.25)
 		self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))

@@ -24,6 +24,7 @@ class ChatGUI(QtGui.QWidget):
 		# Displays the chat
 		self.chatDisplay = QtGui.QTextEdit(self)
 		self.chatDisplay.setReadOnly(True)
+		#self.chatDisplay.verticalScrollBar().rangeChanged.connect(self.updateScrollBar)
 
 		# Text input for chat
 		self.chatInput = QtGui.QLineEdit(self)
