@@ -33,11 +33,12 @@ class ChatClient(QtCore.QObject):
 			self.userName = command
 
 	def send_message(self):
-		message = "PUT " 
-		message += self.GUI.chatInput.text().toAscii()
-		self.GUI.chatInput.clear()
-		self.GUI.chatInput.setFocus()
-		self.serverSocket.send(message)
+		message = self.GUI.chatInput.text().toAscii()
+		if message:
+			message = "PUT " + message
+			self.GUI.chatInput.clear()
+			self.serverSocket.send(message)
+		self.GUI.chatInput.setFocus()		
 
 	def get_data(self):
 		while(1):
@@ -87,7 +88,7 @@ class ChatClient(QtCore.QObject):
 			self.app.closeAllWindows()
 
 	def run(self):
-		self.process_command("HELLO I AM RUSSIA")
+		self.process_command("HELLO I AM SWEDEN")
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
 		self.serverSocket.settimeout(.25)
 		self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
