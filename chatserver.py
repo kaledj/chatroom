@@ -5,6 +5,8 @@ import re
 import thread
 import select
 
+debug = False
+
 class ChatServer:
 	serverPort = 0
 	backlog = 5
@@ -54,7 +56,6 @@ class ChatServer:
 			request = connectionSocket.recv(1024)
 			splitRequest = request.split(' ', 1)
 			if splitRequest[0] == "NAME":
-				#print request
 				if len(splitRequest) == 2:
 					if(self.nameExists(splitRequest[1])):
 						connectionSocket.send("ERROR Name is in use")
@@ -65,21 +66,18 @@ class ChatServer:
 				else:
 					connectionSocket.send("ERROR Invalid name")
 			elif splitRequest[0] == "GETMSGS":
-				#print request
 				info = self.getSocketInfo(connectionSocket)
 				message = "MSGS " + info[2]
 				connectionSocket.send(message)
 				info[2] = ""
-				print message
+				if debug: print message
 			elif splitRequest[0] == "GETUSERS":
-				#print request
 				data = "USERS "
 				for i in self.clientInfo:
 					data += i[1]+"\n"
 				connectionSocket.send(data)
-				print data
+				if debug: print data
 			elif splitRequest[0] == "PUT":
-				#print request
 				if len(splitRequest) == 2:
 					name = self.getSocketInfo(connectionSocket)[1]
 					for s in self.clientInfo:
@@ -88,7 +86,6 @@ class ChatServer:
 						s[2] += "<"+name+">"+splitRequest[1]
 					#connectionSocket.send("OK")
 			elif splitRequest[0] == "USERS":
-				#print request
 				data = "MSGS \nUsers:"
 				for i in self.clientInfo:
 					data += i[1]+"\n"

@@ -19,7 +19,8 @@ class ChatClient(QtCore.QObject):
 		self.clientThread = thread.start_new_thread(self.run, ())
 		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
 		self.connect(self, QtCore.SIGNAL("addMessage"), self.GUI.addMessage)
-		sys.exit(self.app.exec_())
+		self.connect(self, QtCore.SIGNAL("exit"), self.GUI.exit)
+		self.app.exec_()
 
 	# handle_connection                                                                                                                       
 	def send_username(self, serverPort):
@@ -49,8 +50,8 @@ class ChatClient(QtCore.QObject):
 
 	def get_users(self):
 		message = "GETUSERS"
-		self.serverSocket.send(message)
 		try:
+			self.serverSocket.send(message)
 			chats = self.serverSocket.recv(4196)
 			chatsArray = chats.split(" ",1)
 			#print chatsArray
@@ -64,12 +65,14 @@ class ChatClient(QtCore.QObject):
 				#print chatsArray
 				#print "error in get_users"
 		except Exception, e:
-			pass
+			print "Error connecting to server"
+			self.emit(QtCore.SIGNAL("exit"),)
+			sys.exit(0)
 
 	def get_msgs(self):
 		message = "GETMSGS"
-		self.serverSocket.send(message)
 		try:
+			self.serverSocket.send(message)
 			chats = self.serverSocket.recv(4196)
 			chatsArray = chats.split(" ",1)
 			#print chatsArray
@@ -79,7 +82,9 @@ class ChatClient(QtCore.QObject):
 			else:
 				print "error in get_msgs"
 		except Exception, e:
-			pass
+			print "Error connecting to server"
+			self.emit(QtCore.SIGNAL("exit"),)
+			sys.exit(0)
 
 	def check_status(self,status):
 		if status == "OK":
@@ -92,10 +97,15 @@ class ChatClient(QtCore.QObject):
 		self.process_command(sys.argv[1])
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
 		self.serverSocket.settimeout(.25)
-		self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
-		self.serverSocket.send("NAME " + self.userName)
-		status = self.serverSocket.recv(256)
-		self.check_status(status)
+		try:
+			self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
+			self.serverSocket.send("NAME " + self.userName)
+			status = self.serverSocket.recv(256)
+			self.check_status(status)
+		except:
+			print "Error contacting server"
+			self.emit(QtCore.SIGNAL("exit"),)
+			sys.exit(0)
 		self.get_data()
 		while(1):
 			a = 0

@@ -51,6 +51,9 @@ class ChatGUI(QtGui.QWidget):
 		self.setWindowIcon(QtGui.QIcon("icons\sina.png"))
 		self.show()
 		self.chatInput.setFocus()
+	
+	def exit(self):
+		sys.exit(0)
 
 	def sendmessage(self):
 		message = self.chatInput.text()
