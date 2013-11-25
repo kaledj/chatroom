@@ -27,6 +27,7 @@ class ChatClient(QtCore.QObject):
 		request = connectionSocket.recv(1024)
 		regex = re.compile(request)
 
+	
 	def process_command(self,command):
 		if not command:
 			print "Error, username not provided. Program terminated"
