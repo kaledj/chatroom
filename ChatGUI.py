@@ -1,5 +1,7 @@
 """
-ChatGUI client GUI
+ChatGUI: class that client GUI
+
+
 
 
 author: David Kale, Sina Tashakkori, Tim Jassman
@@ -11,10 +13,16 @@ from PyQt4 import QtGui, QtCore
 
 class ChatGUI(QtGui.QWidget):
 	
+	# Constructor
+	#
 	def __init__(self):
 		super(ChatGUI, self).__init__()
 		self.initUI()
 
+	#  initUI - method that creates GUI components in the proper order, sets the desired
+	#           measurements for those components, puts the components together, and then
+	#	    makes them visible to the user.
+	#
 	def initUI(self):
 		# Displays the list of users
 		self.userList = QtGui.QTextEdit("Users:", self)
@@ -52,33 +60,47 @@ class ChatGUI(QtGui.QWidget):
 		self.show()
 		self.chatInput.setFocus()
 	
+	# exit - method that exits the program.
+	#
 	def exit(self):
 		sys.exit(0)
 
+	# sendmessage - method that takes the users input from the GUI text field, then appends
+	#               it to the bottom of the chat window to be displayed to current user. 
+	#
 	def sendmessage(self):
 		message = self.chatInput.text()
 		if message:
 			self.chatInput.clear()
 			self.chatDisplay.append(message)
 
+	# getmessage - getter method, returns the text typed into the input text field.
+	#
 	def getmessage(self):
 		message = self.chatInput.text()
 		if message:
 			self.chatInput.clear()
 		return message
 
+	# appendusers - method that adds users to the user dictionary data structure
+	#
 	def appendusers(self, userName):
 		self.userList.append(userName)
 
+	# setUserList - method that 
+	#
 	def setUserList(self, user):
 		usersText = "Users:\n----------\n" + user
 		if self.userList.toPlainText() != usersText:
 			self.userList.setText(usersText)
-
+	
+	# updateUserList - method that
+	#
 	def updateUserList(self, signum, frame):
 		print "ASD"
 		self.userList.clear()
 
+	
 	def addMessage(self, message):
 		if message:
 			try:
