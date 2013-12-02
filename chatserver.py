@@ -95,7 +95,7 @@ class ChatServer:
 			if splitRequest[0] == "NAME":
 				if len(splitRequest) == 2:
 					if(self.nameExists(splitRequest[1])):
-						connectionSocket.send("ERROR Name is in use")
+						connectionSocket.send("Error: Name is in use")
 						self.clientSockets.remove(connectionSocket)
 					else:
 						self.clientInfo.append([connectionSocket,splitRequest[1],""])
