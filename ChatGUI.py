@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 """
 ChatGUI.py: Defines a python class that implements a GUI for the chatroom. 
 			Utilizes PyQt4 for GUI components.
@@ -17,7 +19,7 @@ class ChatGUI(QtGui.QWidget):
 		super(ChatGUI, self).__init__()
 		self.initUI()
 
-	#  initUI - method that creates GUI components in the proper order, 
+	#  initUI - Method that creates GUI components in the proper order, 
 	#			sets the desired measurements for those components, 
 	#           puts the components together, and then makes them 
 	#			visible to the user.
@@ -58,24 +60,24 @@ class ChatGUI(QtGui.QWidget):
 		self.show()
 		self.chatInput.setFocus()
 	
-	# exit - exits the program.
+	# exit - Exits the program.
 	#
 	def exit(self):
 		sys.exit(0)
 
-	# appendusers - adds users to the user dictionary data structure
+	# appendusers - Adds users to the user dictionary data structure
 	#
 	def appendusers(self, userName):
 		self.userList.append(userName)
 
-	# setUserList - updates the current visible list of users
+	# setUserList - Updates the current visible list of users
 	#
 	def setUserList(self, user):
 		usersText = "Users:\n----------\n" + user
 		if self.userList.toPlainText() != usersText:
 			self.userList.setText(usersText)
 	
-	# addMessage - appends a message to the end of the chat log	
+	# addMessage - Appends a message to the end of the chat log	
 	def addMessage(self, message):
 		if message:
 			try:
@@ -83,7 +85,7 @@ class ChatGUI(QtGui.QWidget):
 			except:
 				pass
 
-	# connectMessageInput - connects a callable to the 'send' button
+	# connectMessageInput - Connects a callable to the 'send' button
 	def connectMessageInput(self, callable):
 		self.chatInput.returnPressed.connect(callable)
 		self.sendButton.clicked.connect(callable)
