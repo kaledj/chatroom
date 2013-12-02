@@ -51,10 +51,10 @@ class ChatClient(QtCore.QObject):
 			self.serverSocket.send(message)
 		self.GUI.chatInput.setFocus()		
 
-    # get_data - Polls the server for the most recent users list and the most
-    #			 recent chat log. The specific functionality of each is delegated
-    #			 to an appropriate function call.
-    #
+	# get_data - Polls the server for the most recent users list and the most
+	#			 recent chat log. The specific functionality of each is delegated
+	#			 to an appropriate function call.
+	#
 	def get_data(self):
 		while(1):
 			time.sleep(.25)
