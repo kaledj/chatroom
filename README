@@ -1,0 +1,29 @@
+Chat Server v1.0
+Authors: Tim Jassmann, David Kale, Sina Tashakkori
+
+To run:
+	Server:
+		Type "./chatserver.py" to run the chat server on port 15008.
+		Output should be "Server ready for chat clients".
+	Client:
+		Make sure an X server is running and X11 forwarding is enabled if on a 
+		windows machine.
+		Type "./chatclient.py <NAME>" where <NAME> is the name you want to give
+		the chat client.
+		If the name already exists, you will see an error message and the chat
+		client will exit.
+		Otherwise, the GUI will open and you can begin chatting!
+		
+To chat:
+	Simply type in the chatbox and the bottom of the screen, then press enter
+	or hit the send button to send the message to the server.
+	The client automatically queries the server repeatedly for new messages 
+	and updated user lists.
+	
+To quit:
+	Server:
+		Process must be killed with ctrl-c or a kill command from another
+		terminal.
+	Client:
+		Closing the GUI will close the client and remove it from the server's
+		list of clients.
