@@ -1,10 +1,8 @@
 """
-ChatGUI: class that client GUI
+ChatGUI.py: Defines a python class that implements a GUI for the chatroom. 
+			Utilizes PyQt4 for GUI components.
 
-
-
-
-author: David Kale, Sina Tashakkori, Tim Jassman
+author: David Kale, Sina Tashakkori, Tim Jassmann
 version: 1
 """
 
@@ -19,9 +17,10 @@ class ChatGUI(QtGui.QWidget):
 		super(ChatGUI, self).__init__()
 		self.initUI()
 
-	#  initUI - method that creates GUI components in the proper order, sets the desired
-	#           measurements for those components, puts the components together, and then
-	#	    	makes them visible to the user.
+	#  initUI - method that creates GUI components in the proper order, 
+	#			sets the desired measurements for those components, 
+	#           puts the components together, and then makes them 
+	#			visible to the user.
 	#
 	def initUI(self):
 		# Displays the list of users
@@ -29,10 +28,9 @@ class ChatGUI(QtGui.QWidget):
 		self.userList.setReadOnly(True)
 		self.userList.setFixedWidth(100)
 
-		# Displays the chat
+		# Displays the chat log
 		self.chatDisplay = QtGui.QTextEdit(self)
 		self.chatDisplay.setReadOnly(True)
-		#self.chatDisplay.verticalScrollBar().rangeChanged.connect(self.updateScrollBar)
 
 		# Text input for chat
 		self.chatInput = QtGui.QLineEdit(self)
@@ -51,56 +49,33 @@ class ChatGUI(QtGui.QWidget):
 		self.container = QtGui.QVBoxLayout(self)
 		self.container.addLayout(self.displayBox)
 		self.container.addLayout(self.sendBox)
-
 		self.setLayout(self.container)
 
+		# Display the window
 		self.setGeometry(300, 300, 350, 250)
 		self.setWindowTitle("ChatGUI")
 		self.setWindowIcon(QtGui.QIcon("icons\sina.png"))
 		self.show()
 		self.chatInput.setFocus()
 	
-	# exit - method that exits the program.
+	# exit - exits the program.
 	#
 	def exit(self):
 		sys.exit(0)
 
-	# sendmessage - method that takes the users input from the GUI text field, then appends
-	#               it to the bottom of the chat window to be displayed to current user. 
-	#
-	def sendmessage(self):
-		message = self.chatInput.text()
-		if message:
-			self.chatInput.clear()
-			self.chatDisplay.append(message)
-
-	# getmessage - getter method, returns the text typed into the input text field.
-	#
-	def getmessage(self):
-		message = self.chatInput.text()
-		if message:
-			self.chatInput.clear()
-		return message
-
-	# appendusers - method that adds users to the user dictionary data structure
+	# appendusers - adds users to the user dictionary data structure
 	#
 	def appendusers(self, userName):
 		self.userList.append(userName)
 
-	# setUserList - method that 
+	# setUserList - updates the current visible list of users
 	#
 	def setUserList(self, user):
 		usersText = "Users:\n----------\n" + user
 		if self.userList.toPlainText() != usersText:
 			self.userList.setText(usersText)
 	
-	# updateUserList - method that
-	#
-	def updateUserList(self, signum, frame):
-		print "ASD"
-		self.userList.clear()
-
-	
+	# addMessage - appends a message to the end of the chat log	
 	def addMessage(self, message):
 		if message:
 			try:
@@ -108,12 +83,11 @@ class ChatGUI(QtGui.QWidget):
 			except:
 				pass
 
+	# connectMessageInput - connects a callable to the 'send' button
 	def connectMessageInput(self, callable):
 		self.chatInput.returnPressed.connect(callable)
 		self.sendButton.clicked.connect(callable)
 
-	def connectUserList(self, callable, text):
-		self.userList.setText(text).connect(callable)
 
 def main():
 	app = QtGui.QApplication(sys.argv)
