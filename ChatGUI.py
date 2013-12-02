@@ -25,6 +25,8 @@ class ChatGUI(QtGui.QWidget):
 	#			visible to the user.
 	#
 	def initUI(self):
+		# Create a menuBar
+		self.initMenuBar()
 
 		# Displays the list of users
 		self.userList = QtGui.QTextEdit("Users:", self)
@@ -43,6 +45,7 @@ class ChatGUI(QtGui.QWidget):
 		self.sendButton = QtGui.QPushButton('Send', self)
 		
 		# Layout management
+		#self.menuBarBox = QtGui.QHBoxLayout()
 		self.displayBox = QtGui.QHBoxLayout()
 		self.displayBox.addWidget(self.chatDisplay)
 		self.displayBox.addWidget(self.userList)
@@ -50,6 +53,7 @@ class ChatGUI(QtGui.QWidget):
 		self.sendBox.addWidget(self.chatInput)
 		self.sendBox.addWidget(self.sendButton)
 		self.container = QtGui.QVBoxLayout(self)
+		self.container.setMenuBar(self.menuBar)
 		self.container.addLayout(self.displayBox)
 		self.container.addLayout(self.sendBox)
 		self.setLayout(self.container)
@@ -61,16 +65,35 @@ class ChatGUI(QtGui.QWidget):
 		self.show()
 		self.chatInput.setFocus()
 	
-	def init_menubar(self):
-		init_filemenu()
-		init_editmenu()
-		init_helpmenu()
+	def initMenuBar(self):
+		self.menuBar = QtGui.QMenuBar()
+		self.initFileMenu()
+		self.initEditMenu()
+		self.initHelpMenu()
 
-	def init_filemenu(self):
+	def initFileMenu(self):
+		# Create exit action
+		exitAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&Exit', self)
+		exitAction.setStatusTip('Exit application')
+		exitAction.triggered.connect(QtGui.qApp.quit)
+		# Create file menu and add actions
+		fileMenu = self.menuBar.addMenu('&File')
+		fileMenu.addAction(exitAction)
 
-	def init_filemenu(self):
+	def initEditMenu(self):
+		# Create preferences action
+		prefsAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&Preferences', self)
+		prefsAction.setStatusTip('Edit Application Preferences')
+		#prefsAction.triggered.connect(QtGui.qApp.quit)
+		# Create edit menu and add actions
+		editMenu = self.menuBar.addMenu('&Edit')
+		editMenu.addAction(prefsAction)
 
-	def init_filemenu(self):
+	def initHelpMenu(self):
+		aboutAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&About', self)
+		aboutAction.setStatusTip('About this software')
+		helpMenu = self.menuBar.addMenu('&Help')
+		helpMenu.addAction(aboutAction)
 
 	# exit - Exits the program.
 	#
