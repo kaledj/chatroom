@@ -21,7 +21,7 @@ class ChatGUI(QtGui.QWidget):
 
 	#  initUI - method that creates GUI components in the proper order, sets the desired
 	#           measurements for those components, puts the components together, and then
-	#	    makes them visible to the user.
+	#	    	makes them visible to the user.
 	#
 	def initUI(self):
 		# Displays the list of users
