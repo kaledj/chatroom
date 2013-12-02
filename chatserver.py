@@ -1,4 +1,10 @@
 #!/usr/bin/python                                                                                                                        
+"""
+ChatServer: class that runs the chatserver
+
+author: David Kale, Sina Tashakkori, Tim Jassmann
+version: 1
+"""
 
 from socket import *
 import re
@@ -12,11 +18,13 @@ class ChatServer:
 	backlog = 5
 	clientSockets = []
 	clientInfo = []
-	# constructor                                                                                                                                                                 
+	# Constructor
+	#
 	def __init__(self, serverPort):
 		self.serverPort = serverPort
 
-	# run                                                                                                                                                                         
+	# run - creates serversocket and listens on that socket for requests.
+	#
 	def run(self):
 		serverSocket = socket(AF_INET,SOCK_STREAM)
 		serverSocket.bind(('',self.serverPort))
@@ -32,25 +40,54 @@ class ChatServer:
 					self.clientSockets.append(connectionSocket)
 				elif s in self.clientSockets:
 					thread.start_new_thread(self.handle_connection,(s,))
-
+	
+	# nameExists - returns true if the name exists. Otherwise returns false.
+	# 
+	# Parameters: 
+	# name - the name to check
+	#
+	# Returns: true if name exists.
+	#
 	def nameExists(self, name):
 		for s in self.clientInfo:
 			if s[1] == name:
 				return True
 		return False
-
+	
+	# getSocketInfo - returns socket info tuple.
+	#
+	# Parameters:
+	# connectionSocket - the socket to get info about
+	#
+	# Returns: The tuple containing info on the socket.
+	#
 	def getSocketInfo(self, connectionSocket):
 		for s in self.clientInfo:
 			if s[0] == connectionSocket:
 				return s
 
+	# socketInfoExists - returns true if info on the socket exists.
+	#
+	# Parameters:
+	# connectionSocket - the socket to look for info on.
+	#
+	# Returns: True if info on the socket exists.
+	# 
 	def socketInfoExists(self, connectionSocket):
 		for s in self.clientInfo:
 			if s[0] == connectionSocket:
 				return True
 		return False
 
-	# handle_connection                                                                                                                                                           
+	# handle_connection - handles a request from a connection.
+	# Requests:
+	# NAME - sets the name of the socket
+	# GETMSGS - sends messages for specific client
+	# GETUSERS - sends the user list
+	# PUT - adds the message to each user's message list
+	# 
+	# Parameters:
+	# connectionSocket - the socket to handle a request from
 	def handle_connection(self, connectionSocket):
 		try:
 			request = connectionSocket.recv(1024)
@@ -84,17 +121,14 @@ class ChatServer:
 						if(s[2]):
 							s[2] += "\n"
 						s[2] += "<"+name+">"+splitRequest[1]
-					#connectionSocket.send("OK")
-			elif splitRequest[0] == "USERS":
-				data = "MSGS \nUsers:"
-				for i in self.clientInfo:
-					data += i[1]+"\n"
-				connectionSocket.send(data)
 			else:
 				if connectionSocket in self.clientSockets:
 					self.clientSockets.remove(connectionSocket)
 					self.clientInfo.remove(self.getSocketInfo(connectionSocket))
 		except Exception:
 			pass
+
+#creates new server on port 15008
 server = ChatServer(15008)
+#runs the server
 server.run()
