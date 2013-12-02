@@ -4,7 +4,7 @@
 chatclient.py: Defines a python class that implements a client for a chatroom. 
 
 author: David Kale, Sina Tashakkori, Tim Jassmann
-version: 1
+version: 2
 """
 
 from ChatGUI import *

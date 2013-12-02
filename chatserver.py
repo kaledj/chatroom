@@ -3,7 +3,7 @@
 ChatServer: class that runs the chatserver
 
 author: David Kale, Sina Tashakkori, Tim Jassmann
-version: 1
+version: 2
 """
 
 from socket import *

@@ -5,7 +5,7 @@ ChatGUI.py: Defines a python class that implements a GUI for the chatroom.
 			Utilizes PyQt4 for GUI components.
 
 author: David Kale, Sina Tashakkori, Tim Jassmann
-version: 1
+version: 2
 """
 
 import sys
@@ -25,6 +25,7 @@ class ChatGUI(QtGui.QWidget):
 	#			visible to the user.
 	#
 	def initUI(self):
+
 		# Displays the list of users
 		self.userList = QtGui.QTextEdit("Users:", self)
 		self.userList.setReadOnly(True)
@@ -60,6 +61,17 @@ class ChatGUI(QtGui.QWidget):
 		self.show()
 		self.chatInput.setFocus()
 	
+	def init_menubar(self):
+		init_filemenu()
+		init_editmenu()
+		init_helpmenu()
+
+	def init_filemenu(self):
+
+	def init_filemenu(self):
+
+	def init_filemenu(self):
+
 	# exit - Exits the program.
 	#
 	def exit(self):
