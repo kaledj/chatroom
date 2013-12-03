@@ -28,6 +28,9 @@ class ChatGUI(QtGui.QWidget):
 		# Create a menuBar
 		self.initMenuBar()
 
+		# Create dialogs
+		self.createDialogs()
+
 		# Displays the list of users
 		self.userList = QtGui.QTextEdit("Users:", self)
 		self.userList.setReadOnly(True)
@@ -64,12 +67,16 @@ class ChatGUI(QtGui.QWidget):
 		self.setWindowIcon(QtGui.QIcon("icons\sina.png"))
 		self.show()
 		self.chatInput.setFocus()
-	
+
 	def initMenuBar(self):
 		self.menuBar = QtGui.QMenuBar()
 		self.initFileMenu()
 		self.initEditMenu()
 		self.initHelpMenu()
+
+	def createDialogs(self):
+		self.loginDialog = QtGui.QInputDialog(self)
+		self.prefsDialog = QtGui.QInputDialog(self)
 
 	def initFileMenu(self):
 		# Create exit action
@@ -94,6 +101,14 @@ class ChatGUI(QtGui.QWidget):
 		aboutAction.setStatusTip('About this software')
 		helpMenu = self.menuBar.addMenu('&Help')
 		helpMenu.addAction(aboutAction)
+
+	def showLoginDialog(self):
+		input, status = self.loginDialog.getText(self, 'Chatroom Login', 
+			'Username:')
+		if status and input:
+			self.emit(QtCore.SIGNAL("usernameGiven"), input)
+		else:
+			self.showLoginDialog()
 
 	# exit - Exits the program.
 	#

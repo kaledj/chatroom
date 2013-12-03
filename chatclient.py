@@ -29,6 +29,8 @@ class ChatClient(QtCore.QObject):
 		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
 		self.connect(self, QtCore.SIGNAL("addMessage"), self.GUI.addMessage)
 		self.connect(self, QtCore.SIGNAL("exit"), self.GUI.exit)
+		self.connect(self, QtCore.SIGNAL("promptUsername"), self.GUI.showLoginDialog)
+		self.connect(self.GUI, QtCore.SIGNAL("usernameGiven"), self.setUsername)
 		self.app.exec_()
 
 	# process_command - Takes expected command line arguments to initialize username.
@@ -39,6 +41,12 @@ class ChatClient(QtCore.QObject):
 			sys.exit()
 		else:
 			self.userName = command
+
+	def promptUsername(self):
+		self.emit(QtCore.SIGNAL("promptUsername"),)
+
+	def setUsername(self, username):
+		self.userName = str(username)	
 
 	# send_message - Obtains the text from chat input and sends them to server. 
 	#				 PUT is prepended to indicate the method.
@@ -112,11 +120,14 @@ class ChatClient(QtCore.QObject):
 	#
 	def run(self):
 		try:
-			self.process_command(sys.argv[1])
-		except IndexError:
+			self.promptUsername()
+			#self.process_command(sys.argv[1])
+		except:
 			print "Error: Must provide a username"
 			self.emit(QtCore.SIGNAL("exit"),)
 			sys.exit(0)
+		while True:
+			if self.userName: break
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
 		self.serverSocket.settimeout(.25)
 		try:
