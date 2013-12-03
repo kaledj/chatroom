@@ -83,7 +83,9 @@ class ChatClient(QtCore.QObject):
 		while(1):
 			time.sleep(.25)
 			self.get_users()
+			self.check_response()
 			self.get_msgs()
+			self.check_response()
 
 	# get_users - Polls the server for the most recent list of users. This
 	#			  list is sent to the GUI.
@@ -92,10 +94,6 @@ class ChatClient(QtCore.QObject):
 		message = "GETUSERS"
 		try:
 			self.serverSocket.send(message)
-			chats = self.serverSocket.recv(4196)
-			chatsArray = chats.split(" ",1)
-			if chatsArray[0] == "USERS":
-				self.emit(QtCore.SIGNAL("updateUsers"), chatsArray[1])
 		except Exception, e:
 			print "Error connecting to server"
 			self.emit(QtCore.SIGNAL("exit"),)
@@ -108,16 +106,25 @@ class ChatClient(QtCore.QObject):
 		message = "GETMSGS"
 		try:
 			self.serverSocket.send(message)
-			chats = self.serverSocket.recv(4196)
-			chatsArray = chats.split(" ",1)
-			if chatsArray[0] == "MSGS":
-				self.emit(QtCore.SIGNAL("addMessage"), chatsArray[1])
-			else:
-				print "error in get_msgs"
 		except Exception, e:
 			print "Error connecting to server"
 			self.emit(QtCore.SIGNAL("exit"),)
 			sys.exit(0)
+
+	def check_response(self):
+		try:
+			chats = self.serverSocket.recv(4196)
+			response = chats.split(" ", 1)
+			if response[0] == "USERS":
+				self.emit(QtCore.SIGNAL("updateUsers"), response[1])
+			elif response[0] == "MSGS":
+				self.emit(QtCore.SIGNAL("addMessage"), response[1])
+			elif response[0] == "ERROR":
+				pass
+		except Exception, e:
+			print e
+			pass
+
 
 	# check_status - Small helper method that checks a given server status.
 	#		
@@ -137,7 +144,7 @@ class ChatClient(QtCore.QObject):
 	def run(self):
 		try:
 			self.promptUsername()
-			#self.process_command(sys.argv[1])
+			self.process_command(sys.argv[1])
 		except:
 			print "Error: Must provide a username"
 			self.emit(QtCore.SIGNAL("exit"),)
@@ -145,19 +152,18 @@ class ChatClient(QtCore.QObject):
 		while True:
 			if self.userName: break
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
-		self.serverSocket.settimeout(.25)
+		#self.serverSocket.settimeout(.25)
 		try:
 			self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
 			self.serverSocket.send("NAME " + self.userName)
 			status = self.serverSocket.recv(256)
 			self.check_status(status)
+			self.serverSocket.send("LANG es")
 		except:
 			print "Error contacting server"
 			self.emit(QtCore.SIGNAL("exit"),)
 			sys.exit(0)
 		self.get_data()
-		while(1):
-			a = 0
 
 def main():
 	client = ChatClient(15008)
