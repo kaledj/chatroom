@@ -83,7 +83,8 @@ class ChatGUI(QtGui.QWidget):
 		self.prefsDialog.prefsContainer = QtGui.QHBoxLayout(self.prefsDialog)
 		self.prefsDialog.langLabel = QtGui.QLabel("Language:")
 		self.prefsDialog.langSelect = QtGui.QComboBox()
-		self.prefsDialog.langSelect.addItems(["English", "Spanish", "Portuguese", "German", "French"])
+		self.prefsDialog.langSelect.addItems(["en", "es", "pt", "de", "fr"])
+		self.prefsDialog.langSelect.currentIndexChanged.connect(self.changeLanguage)
 		self.prefsDialog.prefsContainer.addWidget(self.prefsDialog.langLabel)
 		self.prefsDialog.prefsContainer.addWidget(self.prefsDialog.langSelect)
 		self.prefsDialog.setLayout(self.prefsDialog.prefsContainer)
@@ -127,6 +128,11 @@ class ChatGUI(QtGui.QWidget):
 			'Username:')
 		if status and input:
 			self.emit(QtCore.SIGNAL("usernameChanged"), input)
+
+	def changeLanguage(self):
+		print "Language changed to: " + self.prefsDialog.langSelect.currentText().toAscii()
+		self.emit(QtCore.SIGNAL("languageChanged"), 
+			self.prefsDialog.langSelect.currentText().toAscii())
 
 	def showPrefsDialog(self):
 		self.prefsDialog.show()

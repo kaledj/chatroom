@@ -38,6 +38,7 @@ class ChatClient(QtCore.QObject):
 		# Signals from GUI
 		self.connect(self.GUI, QtCore.SIGNAL("usernameGiven"), self.setUsername)
 		self.connect(self.GUI, QtCore.SIGNAL("usernameChanged"), self.changeUsername)
+		self.connect(self.GUI, QtCore.SIGNAL("languageChanged"), self.changeLanguage)
 
 	# process_command - Takes expected command line arguments to initialize username.
 	#
@@ -59,6 +60,9 @@ class ChatClient(QtCore.QObject):
 		if username.toAscii() != self.userName:
 			self.userName = username.toAscii()
 			self.serverSocket.send("NAME " + self.userName)
+
+	def changeLanguage(self, lang):
+		self.serverSocket.send("LANG " + lang)
 
 	# send_message - Obtains the text from chat input and sends them to server. 
 	#				 PUT is prepended to indicate the method.
