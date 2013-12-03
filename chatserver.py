@@ -87,6 +87,7 @@ class ChatServer:
 	# GETMSGS - sends messages for specific client
 	# GETUSERS - sends the user list
 	# PUT - adds the message to each user's message list
+	# LANG - changes language you are using
 	# 
 	# Parameters:
 	# connectionSocket - the socket to handle a request from
@@ -98,11 +99,13 @@ class ChatServer:
 				if len(splitRequest) == 2:
 					if(self.nameExists(splitRequest[1])):
 						connectionSocket.send("ERROR Name is in use")
-						self.clientSockets.remove(connectionSocket)
+						#self.clientSockets.remove(connectionSocket)
 					else:
-						if(self.socketInfoExists(connectionSocket):
+						if(self.socketInfoExists(connectionSocket)):
 							self.getSocketInfo(connectionSocket)[1] = splitRequest[1]
+							print 'NAME CHANGE'
 						else:
+							print 'NEW USER'
 							self.clientInfo.append([connectionSocket,splitRequest[1],"","en"])
 							connectionSocket.send("OK")
 				else:
