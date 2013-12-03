@@ -15,7 +15,8 @@ import time
 class ChatClient(QtCore.QObject):
 
 	userName = ""
-	
+	login = False
+
 	# Constructor                                                                                                                             
 	#
 	def __init__(self, serverPort):
@@ -24,9 +25,9 @@ class ChatClient(QtCore.QObject):
 		self.serverPort = serverPort
 		self.GUI = ChatGUI()
 		self.GUI.connectMessageInput(self.send_message)
-		self.clientThread = thread.start_new_thread(self.run, ())
 		# Connects relevant signals to GUI slots
 		self.connectSignals()
+		self.clientThread = thread.start_new_thread(self.run, ())
 		self.app.exec_()
 
 	def connectSignals(self):
@@ -142,17 +143,10 @@ class ChatClient(QtCore.QObject):
 	#		server periodically for the most recent chat data. 
 	#
 	def run(self):
-		try:
-			self.promptUsername()
-			self.process_command(sys.argv[1])
-		except:
-			print "Error: Must provide a username"
-			self.emit(QtCore.SIGNAL("exit"),)
-			sys.exit(0)
+		self.emit(QtCore.SIGNAL("promptUsername"),)
 		while True:
 			if self.userName: break
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
-		#self.serverSocket.settimeout(.25)
 		try:
 			self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
 			self.serverSocket.send("NAME " + self.userName)
