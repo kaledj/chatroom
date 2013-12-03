@@ -5,11 +5,12 @@ ChatServer: class that runs the chatserver
 author: David Kale, Sina Tashakkori, Tim Jassmann
 version: 2
 """
-
+from translate import *
 from socket import *
 import re
 import thread
 import select
+import unicodedata
 
 debug = False
 
@@ -22,6 +23,7 @@ class ChatServer:
 	#
 	def __init__(self, serverPort):
 		self.serverPort = serverPort
+		self.translator = Translator()
 
 	# run - creates serversocket and listens on that socket for requests.
 	#
@@ -98,7 +100,7 @@ class ChatServer:
 						connectionSocket.send("ERROR Name is in use")
 						self.clientSockets.remove(connectionSocket)
 					else:
-						self.clientInfo.append([connectionSocket,splitRequest[1],""])
+						self.clientInfo.append([connectionSocket,splitRequest[1],"","en"])
 						connectionSocket.send("OK")
 				else:
 					connectionSocket.send("ERROR Invalid name")
@@ -116,11 +118,13 @@ class ChatServer:
 				if debug: print data
 			elif splitRequest[0] == "PUT":
 				if len(splitRequest) == 2:
-					name = self.getSocketInfo(connectionSocket)[1]
+					info = self.getSocketInfo(connectionSocket)
+					name = info[1]
 					for s in self.clientInfo:
 						if(s[2]):
 							s[2] += "\n"
-						s[2] += "<"+name+">"+splitRequest[1]
+						line = "<"+name+">"+self.translator.translate(splitRequest[1],info[3],s[3])
+						s[2] += unicodedata.normalize('NFKD',line).encode('ascii','ignore')
 			else:
 				if connectionSocket in self.clientSockets:
 					self.clientSockets.remove(connectionSocket)
