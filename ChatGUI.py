@@ -80,13 +80,13 @@ class ChatGUI(QtGui.QWidget):
 		# Preferences
 		self.prefsDialog = QtGui.QDialog(self)
 		self.prefsDialog.setWindowTitle("Preferences")
-		prefsContainer = QtGui.QHBoxLayout(self.prefsDialog)
-		langLabel = QtGui.QLabel("Language:")
-		langSelect = QtGui.QComboBox()
-		langSelect.addItems(["English", "Spanish", "Portuguese", "German", "French"])
-		prefsContainer.addWidget(langLabel)
-		prefsContainer.addWidget(langSelect)
-		self.prefsDialog.setLayout(prefsContainer)
+		self.prefsDialog.prefsContainer = QtGui.QHBoxLayout(self.prefsDialog)
+		self.prefsDialog.langLabel = QtGui.QLabel("Language:")
+		self.prefsDialog.langSelect = QtGui.QComboBox()
+		self.prefsDialog.langSelect.addItems(["English", "Spanish", "Portuguese", "German", "French"])
+		self.prefsDialog.prefsContainer.addWidget(self.prefsDialog.langLabel)
+		self.prefsDialog.prefsContainer.addWidget(self.prefsDialog.langSelect)
+		self.prefsDialog.setLayout(self.prefsDialog.prefsContainer)
 
 	def initFileMenu(self):
 		# Create exit action

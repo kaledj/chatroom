@@ -56,8 +56,8 @@ class ChatClient(QtCore.QObject):
 			self.userName = str(username)
 
 	def changeUsername(self, username):
-		if username is not self.userName:
-			self.userName = str(username)
+		if username.toAscii() != self.userName:
+			self.userName = username.toAscii()
 			self.serverSocket.send("NAME " + self.userName)
 
 	# send_message - Obtains the text from chat input and sends them to server. 
