@@ -83,7 +83,7 @@ class ChatGUI(QtGui.QWidget):
 		self.prefsDialog.prefsContainer = QtGui.QHBoxLayout(self.prefsDialog)
 		self.prefsDialog.langLabel = QtGui.QLabel("Language:")
 		self.prefsDialog.langSelect = QtGui.QComboBox()
-		self.prefsDialog.langSelect.addItems(["en", "es", "pt", "de", "fr"])
+		self.prefsDialog.langSelect.addItems(["en", "es", "pt", "de", "fr", "ru", "it", "nl"])
 		self.prefsDialog.langSelect.currentIndexChanged.connect(self.changeLanguage)
 		self.prefsDialog.prefsContainer.addWidget(self.prefsDialog.langLabel)
 		self.prefsDialog.prefsContainer.addWidget(self.prefsDialog.langSelect)
