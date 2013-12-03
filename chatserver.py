@@ -100,8 +100,11 @@ class ChatServer:
 						connectionSocket.send("ERROR Name is in use")
 						self.clientSockets.remove(connectionSocket)
 					else:
-						self.clientInfo.append([connectionSocket,splitRequest[1],"","en"])
-						connectionSocket.send("OK")
+						if(self.socketInfoExists(connectionSocket):
+							self.getSocketInfo(connectionSocket)[1] = splitRequest[1]
+						else:
+							self.clientInfo.append([connectionSocket,splitRequest[1],"","en"])
+							connectionSocket.send("OK")
 				else:
 					connectionSocket.send("ERROR Invalid name")
 			elif splitRequest[0] == "GETMSGS":
