@@ -59,6 +59,11 @@ class ChatGUI(QtGui.QWidget):
 		self.container.setMenuBar(self.menuBar)
 		self.container.addLayout(self.displayBox)
 		self.container.addLayout(self.sendBox)
+		self.statusBar = QtGui.QStatusBar(self)
+		self.statusBar.showMessage("Language: " + self.prefsDialog.langSelect.currentText())
+		self.statusBarLayout = QtGui.QVBoxLayout()
+		self.statusBarLayout.addWidget(self.statusBar)
+		self.container.addLayout(self.statusBarLayout)
 		self.setLayout(self.container)
 
 		# Display the window
@@ -130,7 +135,7 @@ class ChatGUI(QtGui.QWidget):
 			self.emit(QtCore.SIGNAL("usernameChanged"), input)
 
 	def changeLanguage(self):
-		print "Language changed to: " + self.prefsDialog.langSelect.currentText().toAscii()
+		self.statusBar.showMessage("Language: " + self.prefsDialog.langSelect.currentText())
 		self.emit(QtCore.SIGNAL("languageChanged"), 
 			self.prefsDialog.langSelect.currentText().toAscii())
 
