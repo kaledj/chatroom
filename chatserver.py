@@ -125,6 +125,10 @@ class ChatServer:
 							s[2] += "\n"
 						line = "<"+name+">"+self.translator.translate(splitRequest[1],info[3],s[3])
 						s[2] += unicodedata.normalize('NFKD',line).encode('ascii','ignore')
+			elif splitRequest[0] == "LANG":
+				if len(splitRequest) == 2:
+					info = self.getSocketInfo(connectionSocket)
+					info[3] = splitRequest[1]
 			else:
 				if connectionSocket in self.clientSockets:
 					self.clientSockets.remove(connectionSocket)
