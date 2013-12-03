@@ -25,11 +25,11 @@ class ChatGUI(QtGui.QWidget):
 	#			visible to the user.
 	#
 	def initUI(self):
-		# Create a menuBar
-		self.initMenuBar()
-
 		# Create dialogs
 		self.createDialogs()
+
+		# Create a menuBar
+		self.initMenuBar()
 
 		# Displays the list of users
 		self.userList = QtGui.QTextEdit("Users:", self)
@@ -75,13 +75,22 @@ class ChatGUI(QtGui.QWidget):
 		self.initHelpMenu()
 
 	def createDialogs(self):
+		# Login dialog
 		self.loginDialog = QtGui.QInputDialog(self)
-		self.prefsDialog = QtGui.QInputDialog(self)
+		# Preferences
+		self.prefsDialog = QtGui.QDialog(self)
+		self.prefsDialog.setWindowTitle("Preferences")
+		prefsContainer = QtGui.QHBoxLayout(self.prefsDialog)
+		langLabel = QtGui.QLabel("Language:")
+		langSelect = QtGui.QComboBox()
+		langSelect.addItems(["English", "Spanish", "Portuguese", "German", "French"])
+		prefsContainer.addWidget(langLabel)
+		prefsContainer.addWidget(langSelect)
+		self.prefsDialog.setLayout(prefsContainer)
 
 	def initFileMenu(self):
 		# Create exit action
 		exitAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&Exit', self)
-		exitAction.setStatusTip('Exit application')
 		exitAction.triggered.connect(QtGui.qApp.quit)
 		# Create file menu and add actions
 		fileMenu = self.menuBar.addMenu('&File')
@@ -90,11 +99,14 @@ class ChatGUI(QtGui.QWidget):
 	def initEditMenu(self):
 		# Create preferences action
 		prefsAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&Preferences', self)
-		prefsAction.setStatusTip('Edit Application Preferences')
-		#prefsAction.triggered.connect(QtGui.qApp.quit)
+		prefsAction.triggered.connect(self.showPrefsDialog)
+		# Create name change action
+		changeUsernameAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&Change Username', self)
+		changeUsernameAction.triggered.connect(self.changeUsernameDialog)
 		# Create edit menu and add actions
 		editMenu = self.menuBar.addMenu('&Edit')
 		editMenu.addAction(prefsAction)
+		editMenu.addAction(changeUsernameAction)
 
 	def initHelpMenu(self):
 		aboutAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&About', self)
@@ -109,6 +121,15 @@ class ChatGUI(QtGui.QWidget):
 			self.emit(QtCore.SIGNAL("usernameGiven"), input)
 		else:
 			self.showLoginDialog()
+
+	def changeUsernameDialog(self):
+		input, status = self.loginDialog.getText(self, 'Change Username', 
+			'Username:')
+		if status and input:
+			self.emit(QtCore.SIGNAL("usernameChanged"), input)
+
+	def showPrefsDialog(self):
+		self.prefsDialog.show()
 
 	# exit - Exits the program.
 	#

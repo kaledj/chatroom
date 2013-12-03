@@ -26,12 +26,18 @@ class ChatClient(QtCore.QObject):
 		self.GUI.connectMessageInput(self.send_message)
 		self.clientThread = thread.start_new_thread(self.run, ())
 		# Connects relevant signals to GUI slots
+		self.connectSignals()
+		self.app.exec_()
+
+	def connectSignals(self):
+		# Signals to GUI
 		self.connect(self, QtCore.SIGNAL("updateUsers"), self.GUI.setUserList)
 		self.connect(self, QtCore.SIGNAL("addMessage"), self.GUI.addMessage)
 		self.connect(self, QtCore.SIGNAL("exit"), self.GUI.exit)
 		self.connect(self, QtCore.SIGNAL("promptUsername"), self.GUI.showLoginDialog)
+		# Signals from GUI
 		self.connect(self.GUI, QtCore.SIGNAL("usernameGiven"), self.setUsername)
-		self.app.exec_()
+		self.connect(self.GUI, QtCore.SIGNAL("usernameChanged"), self.changeUsername)
 
 	# process_command - Takes expected command line arguments to initialize username.
 	#
@@ -46,7 +52,13 @@ class ChatClient(QtCore.QObject):
 		self.emit(QtCore.SIGNAL("promptUsername"),)
 
 	def setUsername(self, username):
-		self.userName = str(username)	
+		if username is not self.userName:
+			self.userName = str(username)
+
+	def changeUsername(self, username):
+		if username is not self.userName:
+			self.userName = str(username)
+			self.serverSocket.send("NAME " + self.userName)
 
 	# send_message - Obtains the text from chat input and sends them to server. 
 	#				 PUT is prepended to indicate the method.
@@ -59,10 +71,10 @@ class ChatClient(QtCore.QObject):
 			self.serverSocket.send(message)
 		self.GUI.chatInput.setFocus()		
 
-    # get_data - Polls the server for the most recent users list and the most
-    #			 recent chat log. The specific functionality of each is delegated
-    #			 to an appropriate function call.
-    #
+	# get_data - Polls the server for the most recent users list and the most
+	#			 recent chat log. The specific functionality of each is delegated
+	#			 to an appropriate function call.
+	#
 	def get_data(self):
 		while(1):
 			time.sleep(.25)
