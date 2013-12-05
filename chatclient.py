@@ -36,6 +36,7 @@ class ChatClient(QtCore.QObject):
 		self.connect(self, QtCore.SIGNAL("addMessage"), self.GUI.addMessage)
 		self.connect(self, QtCore.SIGNAL("exit"), self.GUI.exit)
 		self.connect(self, QtCore.SIGNAL("promptUsername"), self.GUI.showLoginDialog)
+		self.connect(self, QtCore.SIGNAL("changeUsername"), self.GUI.changeUsernameDialog)
 		# Signals from GUI
 		self.connect(self.GUI, QtCore.SIGNAL("usernameGiven"), self.setUsername)
 		self.connect(self.GUI, QtCore.SIGNAL("usernameChanged"), self.changeUsername)
@@ -58,11 +59,7 @@ class ChatClient(QtCore.QObject):
 			self.userName = str(username)
 
 	def changeUsername(self, username):
-		if username.toAscii() != self.userName:
-			self.serverSocket.send("NAME " + username)
-			status = self.serverSocket.recv(128)
-			if status != "ERROR Name is in use":
-				self.userName = username.toAscii()
+		self.serverSocket.send("NAME " + username)
 
 	def changeLanguage(self, lang):
 		self.serverSocket.send("LANG " + lang)
@@ -123,7 +120,8 @@ class ChatClient(QtCore.QObject):
 			elif response[0] == "MSGS":
 				self.emit(QtCore.SIGNAL("addMessage"), response[1])
 			elif response[0] == "ERROR":
-				pass
+				self.emit(QtCore.SIGNAL("changeUsername"),)
+				self.check_response()
 		except Exception, e:
 			print e
 			pass
