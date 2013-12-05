@@ -59,8 +59,10 @@ class ChatClient(QtCore.QObject):
 
 	def changeUsername(self, username):
 		if username.toAscii() != self.userName:
-			self.userName = username.toAscii()
-			self.serverSocket.send("NAME " + self.userName)
+			self.serverSocket.send("NAME " + username)
+			status = self.serverSocket.recv(128)
+			if status != "ERROR Name is in use":
+				self.userName = username.toAscii()
 
 	def changeLanguage(self, lang):
 		self.serverSocket.send("LANG " + lang)

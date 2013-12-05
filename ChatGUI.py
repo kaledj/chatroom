@@ -46,6 +46,11 @@ class ChatGUI(QtGui.QWidget):
 
 		# Button to send chat message
 		self.sendButton = QtGui.QPushButton('Send', self)
+
+		# Button to attach a file
+		self.attachFileButton = QtGui.QPushButton(self)
+		self.attachFileButton.setIcon(QtGui.QIcon("icons\clip.png"))
+		self.attachFileButton.setToolTip("Attach a file")
 		
 		# Layout management
 		#self.menuBarBox = QtGui.QHBoxLayout()
@@ -54,6 +59,7 @@ class ChatGUI(QtGui.QWidget):
 		self.displayBox.addWidget(self.userList)
 		self.sendBox = QtGui.QHBoxLayout()
 		self.sendBox.addWidget(self.chatInput)
+		self.sendBox.addWidget(self.attachFileButton)
 		self.sendBox.addWidget(self.sendButton)
 		self.container = QtGui.QVBoxLayout(self)
 		self.container.setMenuBar(self.menuBar)
