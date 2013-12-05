@@ -41,16 +41,20 @@ class ChatClient(QtCore.QObject):
 		self.connect(self.GUI, QtCore.SIGNAL("usernameChanged"), self.changeUsername)
 		self.connect(self.GUI, QtCore.SIGNAL("languageChanged"), self.changeLanguage)
 
+	# promptUsername - sends the signal to prompt for a username
 	def promptUsername(self):
 		self.emit(QtCore.SIGNAL("promptUsername"),)
 
+	# setUsername - sets login to true and calls changeUsername
 	def setUsername(self, username):
 		self.login = True
 		self.changeUsername(username)
 
+	# changeUsername - sends a username change request
 	def changeUsername(self, username):
 		self.serverSocket.send("NAME " + username.toAscii())
 
+	# changeLanguage - sends a language change request
 	def changeLanguage(self, lang):
 		self.serverSocket.send("LANG " + lang)
 
@@ -101,7 +105,8 @@ class ChatClient(QtCore.QObject):
 			print "Error connecting to server"
 			self.emit(QtCore.SIGNAL("exit"),)
 			sys.exit(0)
-
+	# check_response - recieves a response and sends out the appropriate signal
+	# 				   to handle the response.
 	def check_response(self):
 		try:
 			chats = self.serverSocket.recv(4196)
