@@ -103,9 +103,9 @@ class ChatServer:
 					else:
 						if(self.socketInfoExists(connectionSocket)):
 							self.getSocketInfo(connectionSocket)[1] = splitRequest[1]
-							print 'NAME CHANGE'
+							if debug: print 'NAME CHANGE'
 						else:
-							print 'NEW USER'
+							if debug: print 'NEW USER'
 							self.clientInfo.append([connectionSocket,splitRequest[1],"","en"])
 							connectionSocket.send("OK")
 				else:
