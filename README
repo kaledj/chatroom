@@ -8,10 +8,11 @@ To run:
 	Client:
 		Make sure an X server is running and X11 forwarding is enabled if on a 
 		windows machine.
-		Type "./chatclient.py <NAME>" where <NAME> is the name you want to give
-		the chat client.
-		If the name already exists, you will see an error message and the chat
-		client will exit.
+		Type "./chatclient.py" to run the chat client to connect on port 15008.
+		A window will open to prompt you for a username. Enter your prefered 
+		username here.
+		If the name already exists, the window will refresh and ask you again
+		to enter a username.
 		Otherwise, the GUI will open and you can begin chatting!
 		
 To chat:
@@ -19,6 +20,16 @@ To chat:
 	or hit the send button to send the message to the server.
 	The client automatically queries the server repeatedly for new messages 
 	and updated user lists.
+
+To change language:
+	Edit -> Preferences
+	Opens a window to select your language of choice.
+	Window can be closed or remain open for quicker changing.
+
+To change name:
+	Edit -> Preferences -> Change Username
+	Type in a new username and hit Ok. Window will close if name is available,
+	or will prompt again if name was taken.
 	
 To quit:
 	Server:
@@ -27,3 +38,4 @@ To quit:
 	Client:
 		Closing the GUI will close the client and remove it from the server's
 		list of clients.
+		Close the GUI by hitting the X in the top right corner or File->Exit.
