@@ -14,7 +14,6 @@ import time
 
 class ChatClient(QtCore.QObject):
 
-	userName = ""
 	login = False
 
 	# Constructor                                                                                                                             
@@ -42,24 +41,15 @@ class ChatClient(QtCore.QObject):
 		self.connect(self.GUI, QtCore.SIGNAL("usernameChanged"), self.changeUsername)
 		self.connect(self.GUI, QtCore.SIGNAL("languageChanged"), self.changeLanguage)
 
-	# process_command - Takes expected command line arguments to initialize username.
-	#
-	def process_command(self,command):
-		if not command:
-			print "Error, username not provided. Program terminated"
-			sys.exit()
-		else:
-			self.userName = command
-
 	def promptUsername(self):
 		self.emit(QtCore.SIGNAL("promptUsername"),)
 
 	def setUsername(self, username):
-		if username is not self.userName:
-			self.userName = str(username)
+		self.login = True
+		self.changeUsername(username)
 
 	def changeUsername(self, username):
-		self.serverSocket.send("NAME " + username)
+		self.serverSocket.send("NAME " + username.toAscii())
 
 	def changeLanguage(self, lang):
 		self.serverSocket.send("LANG " + lang)
@@ -80,6 +70,7 @@ class ChatClient(QtCore.QObject):
 	#			 to an appropriate function call.
 	#
 	def get_data(self):
+		print 'data'
 		while(1):
 			time.sleep(.25)
 			self.get_users()
@@ -122,6 +113,7 @@ class ChatClient(QtCore.QObject):
 			elif response[0] == "ERROR":
 				self.emit(QtCore.SIGNAL("changeUsername"),)
 				self.check_response()
+				pass
 		except Exception, e:
 			print e
 			pass
@@ -132,9 +124,10 @@ class ChatClient(QtCore.QObject):
 	def check_status(self,status):
 		if status == "OK":
 			print "ok to chat"
+			return True
 		else:
-			print status
-			self.app.closeAllWindows()
+			self.emit(QtCore.SIGNAL("promptUsername"),)
+			return False
 
 	# run - Processes the command line arguments and checks for validity. Then, 
 	#		establishes a TCP connection with the chatroom server. Main event
@@ -144,19 +137,18 @@ class ChatClient(QtCore.QObject):
 	#
 	def run(self):
 		self.emit(QtCore.SIGNAL("promptUsername"),)
-		while True:
-			if self.userName: break
 		self.serverSocket = socket(AF_INET,SOCK_STREAM)
-		try:
-			self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
-			self.serverSocket.send("NAME " + self.userName)
-			status = self.serverSocket.recv(256)
-			self.check_status(status)
-			self.serverSocket.send("LANG en")
-		except:
-			print "Error contacting server"
-			self.emit(QtCore.SIGNAL("exit"),)
-			sys.exit(0)
+		self.serverSocket.connect(('student.cs.appstate.edu',self.serverPort))
+		while True:
+			if self.login:
+				try:
+					status = self.serverSocket.recv(256)
+					self.login = self.check_status(status)
+					if self.login: break
+				except:
+					print "Error contacting server"
+					self.emit(QtCore.SIGNAL("exit"),)
+					sys.exit(0)
 		self.get_data()
 
 def main():

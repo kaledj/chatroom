@@ -99,7 +99,6 @@ class ChatServer:
 				if len(splitRequest) == 2:
 					if(self.nameExists(splitRequest[1])):
 						connectionSocket.send("ERROR Name is in use")
-						#self.clientSockets.remove(connectionSocket)
 					else:
 						if(self.socketInfoExists(connectionSocket)):
 							self.getSocketInfo(connectionSocket)[1] = splitRequest[1]
