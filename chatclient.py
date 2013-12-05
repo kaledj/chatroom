@@ -152,7 +152,7 @@ class ChatClient(QtCore.QObject):
 			self.serverSocket.send("NAME " + self.userName)
 			status = self.serverSocket.recv(256)
 			self.check_status(status)
-			self.serverSocket.send("LANG es")
+			self.serverSocket.send("LANG en")
 		except:
 			print "Error contacting server"
 			self.emit(QtCore.SIGNAL("exit"),)
