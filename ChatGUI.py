@@ -140,6 +140,7 @@ class ChatGUI(QtGui.QWidget):
 		self.aboutDialog = QtGui.QDialog(self)
 		readme = open('README', 'r')
 		aboutText = readme.read()
+		readme.close()
 		about = QtGui.QTextEdit(self.aboutDialog)
 		about.setFixedWidth(600)
 		about.setText(aboutText)
