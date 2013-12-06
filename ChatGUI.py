@@ -124,6 +124,7 @@ class ChatGUI(QtGui.QWidget):
 	def initHelpMenu(self):
 		aboutAction = QtGui.QAction(QtGui.QIcon('icons\sina.png'), '&About', self)
 		aboutAction.setStatusTip('About this software')
+		aboutAction.triggered.connect(self.showAboutDialog)
 		helpMenu = self.menuBar.addMenu('&Help')
 		helpMenu.addAction(aboutAction)
 
@@ -134,6 +135,18 @@ class ChatGUI(QtGui.QWidget):
 			self.emit(QtCore.SIGNAL("usernameGiven"), input)
 		else:
 			self.showLoginDialog()
+
+	def showAboutDialog(self):
+		self.aboutDialog = QtGui.QDialog(self)
+		readme = open('README', 'r')
+		aboutText = readme.read()
+		about = QtGui.QTextEdit(self.aboutDialog)
+		about.setFixedWidth(600)
+		about.setText(aboutText)
+		self.aboutDialog.setWindowTitle("About")
+		self.aboutDialog.container = QtGui.QHBoxLayout(self.aboutDialog)
+		self.aboutDialog.container.addWidget(about)
+		self.aboutDialog.show()
 
 	def changeUsernameDialog(self):
 		input, status = self.loginDialog.getText(self, 'Change Username', 
