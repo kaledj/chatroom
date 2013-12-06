@@ -26,6 +26,13 @@ To change language:
 	Opens a window to select your language of choice.
 	Window can be closed or remain open for quicker changing.
 
+Languages available:
+	English, Spanish, Portuguese, German, French, Italian, Dutch
+	Note: Only ASCII characters can be displayed at the moment. If any 
+	characters cannot be displayed, an attempt will be made to display
+	the closest character possible (eg. removing an accent). Otherwise,
+	the character simply will not be displayed.
+	
 To change name:
 	Edit -> Preferences -> Change Username
 	Type in a new username and hit Ok. Window will close if name is available,
@@ -39,3 +46,4 @@ To quit:
 		Closing the GUI will close the client and remove it from the server's
 		list of clients.
 		Close the GUI by hitting the X in the top right corner or File->Exit.
+		
